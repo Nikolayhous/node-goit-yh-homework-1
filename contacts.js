@@ -1,8 +1,6 @@
 const fs = require("fs/promises");
 const path = require("path");
 
-const argv = process.argv;
-
 const contactsPath = path.join(__dirname, "./db/contacts.json");
 // const contactsPath = path.resolve("./db/contacts.json");
 
@@ -15,25 +13,21 @@ async function listContacts() {
   }
 }
 
-async function addContacts(id, name, email, phone) {
+async function addContacts(name, email, phone) {
   let data;
   try {
     data = await fs.readFile(contactsPath, "utf8");
-  } catch {
+    const contacts = JSON.parse(data);
+    contacts.push({
+      id: contacts.length + 1,
+      name: name,
+      email: email,
+      phone: phone,
+    });
+    console.table(contacts);
+    return await fs.writeFile(contactsPath, JSON.stringify(contacts));
+  } catch (error) {
     console.log(error.message);
-  }
-  const content = JSON.parse(data);
-  if (argv[2] === "--list") {
-    console.table(content);
-  } else if (argv[2] === void 0) {
-    console.log("Unknown command");
-  } else {
-    const id = argv[2];
-    const name = argv[3];
-    const email = argv[4];
-    const phone = argv[5];
-    content.push({ id, name, email, phone });
-    return await fs.writeFile(contactsPath, JSON.stringify(content, null, 2));
   }
 }
 

@@ -1,7 +1,19 @@
 const argv = require("yargs").argv;
-
 const { listContacts, addContacts } = require("./contacts.js");
 
-console.log("contacts:", listContacts());
+function invokeAction({ action, id, name, email, phone }) {
+  switch (action) {
+    case "list":
+      listContacts();
+      break;
 
-console.log("contacts:", addContacts());
+    case "add":
+      addContacts(name, email, phone);
+      break;
+
+    default:
+      console.warn("\x1B[31m Unknown action type!");
+  }
+}
+
+invokeAction(argv);

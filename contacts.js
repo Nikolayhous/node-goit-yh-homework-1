@@ -1,10 +1,7 @@
-const { writeFile } = require("fs");
 const fs = require("fs/promises");
 const path = require("path");
-// const app = express();
-const argv = process.argv;
 
-// const PORT = 8080;
+const argv = process.argv;
 
 const contactsPath = path.join(__dirname, "./db/contacts.json");
 // const contactsPath = path.resolve("./db/contacts.json");
@@ -18,11 +15,11 @@ async function listContacts() {
   }
 }
 
-async function addContacts() {
+async function addContacts(id, name, email, phone) {
   let data;
   try {
     data = await fs.readFile(contactsPath, "utf8");
-  } catch (error) {
+  } catch {
     console.log(error.message);
   }
   const content = JSON.parse(data);
@@ -36,30 +33,29 @@ async function addContacts() {
     const email = argv[4];
     const phone = argv[5];
     content.push({ id, name, email, phone });
-    await fs.writeFile(contactsPath, JSON.stringify(content));
+    return await fs.writeFile(contactsPath, JSON.stringify(content, null, 2));
   }
 }
 
-// function getContactById() {
-//   app.get("/home", (reg, res) => {
-//     res.send(contactsPath);
-//   });
-// }
-// app.listen(PORT, (err) => {
-//   if (err) console.error("error at server:", err);
-//   console.log(`server works at ${PORT} `);
-// });
+// async function removeContacts() {
+//   try {
+//     const contactId = await fs.readFile(contactsPath, "utf8");
+//     contactId.filter((contactId) => {
+//       contactId.id !== contactId;
+//     });
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+//   const id = argv[2];
 
-// async  (contactsPath) => {
-//   const contacts = await fs.readFile(contactsPath, "utf8");
-//   console.log(contacts);
-//   await fs.mkdir("./contacts", { recursive: false });
-//   await fs.writeFile("./contacts/index.js", `${contacts}console.log('Hello')`);
-// }(contactsPath);
+//   return await fs.writeFile(
+//     contactId.filter((contactId) => {
+//       id !== contactId;
+//     })
+//   );
+// }
 
 module.exports = {
   listContacts,
-  addContacts()
+  addContacts,
 };
-
-

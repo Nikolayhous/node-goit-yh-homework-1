@@ -44,7 +44,11 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
 
     case "remove":
       const deleteContact = await removeContact(id);
-      console.table(deleteContact);
+      if (deleteContact) {
+        console.table(deleteContact);
+      } else {
+        console.log(chalk.yellow("Incorrect id."));
+      }
       break;
 
     default:
